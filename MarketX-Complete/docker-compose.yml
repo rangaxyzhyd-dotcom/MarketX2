@@ -1,0 +1,19 @@
+services:
+  api:
+    build: ./backend
+    ports: ["8000:8000"]
+    environment:
+      SECRET_KEY: "change-this-before-public-deployment"
+      DATABASE_URL: "sqlite:///./marketx.db"
+      CORS_ORIGINS: "http://localhost:5173,http://localhost:8080"
+    volumes:
+      - marketx_data:/app
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: "http://localhost:8000"
+    ports: ["8080:80"]
+    depends_on: [api]
+volumes:
+  marketx_data:
